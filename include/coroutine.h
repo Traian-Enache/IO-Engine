@@ -72,7 +72,7 @@ inline static int coro_is_done(coro_state state) {
  * async (some_coro_state) {
  *     ...
  *     await {
- *         io_status st = iosvc_sched(..., this_coro, ...);
+ *         io_errcode st = iosvc_sched(..., this_coro, ...);
  *         // do something with st
  *     }
  * }
