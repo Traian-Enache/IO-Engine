@@ -28,6 +28,9 @@ inline static int coro_is_done(coro_state state) {
  *         ...
  *         await async_write_some(svc, ..., this_coro);
  *     }
+ * 
+ *     if (coro_is_done(ctx->coro))
+ *         do_cleanup();
  * }
  * @endcode
  * 
