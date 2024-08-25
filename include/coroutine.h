@@ -11,10 +11,13 @@ inline static int coro_is_done(coro_state state) {
 // clang-format off
 
 /**
- * @brief Starts an asynchronous block. Specify state by value, not by pointer
- * i.e. @code
+ * @brief Starts an asynchronous block. Specify state by value, not by pointer.
+ * Local variables may NOT be created in such a block; add any such variables
+ * to a context object provided to the current function, as in the example:
+ * @code
  * typedef struct {
- *     void *usr_data;
+ *     void *local;
+ *     io_service *svc;
  *     coro_state state;
  * } ctx_t;
  * 
@@ -23,17 +26,17 @@ inline static int coro_is_done(coro_state state) {
  *     ctx_t *ctx = (ctx_t *)arg;
  * 
  *     async (ctx->state) {
- *         await iosvc_sched(svc, ..., this_coro, ...);
+ *         await iosvc_sched(ctx->svc, ..., this_coro, ...);
  * 
+ *         ctx->local = ...;
  *         ...
- *         await async_write_some(svc, ..., this_coro);
+ *         await async_write_some(ctx->svc, ..., this_coro);
  *     }
  * 
  *     if (coro_is_done(ctx->coro))
  *         do_cleanup();
  * }
  * @endcode
- * 
  */
 #define async(state)                                \
     for (coro_state * const _co_st = &(state);      \
@@ -56,6 +59,25 @@ inline static int coro_is_done(coro_state state) {
 #define CO_LABEL__ __LINE__
 #endif
 
+/**
+ * @brief Execute the expression following the await statement,
+ * save coroutine state and exit the async block. A re-entry in
+ * the block will resume the coroutine from the point following
+ * the await statement.
+ * 
+ * The argument may also be a block statement. This allows usage
+ * of local variables:
+ * 
+ * @code
+ * async (some_coro_state) {
+ *     ...
+ *     await {
+ *         io_status st = iosvc_sched(..., this_coro, ...);
+ *         // do something with st
+ *     }
+ * }
+ * @endcode
+ */
 #define await AWAIT_IMPL(CO_LABEL__)
 
 #define AWAIT_IMPL(label)                           \
@@ -74,6 +96,20 @@ inline static int coro_is_done(coro_state state) {
                                 goto _coro_break;   \
                             else /* fallthrough */  \
                             case 0:
+
+/**
+ * @brief marks the current coroutine as finished, such that an
+ * async block may not execute when entered, and coro_is_done()
+ * returns a nonzero value.
+ * Usage: @code
+ * async (some_coro_state) {
+ *     ...
+ *     if (some_condition)
+ *         co_return;
+ * }
+ * @endcode
+ */
+#define co_return await break
 
 // clang-format on
 
