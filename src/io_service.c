@@ -355,4 +355,36 @@ io_errcode iosvc_run(io_service *iosvc) {
     iosvc->status = DONE;
 
     return retval;
+    /**
+     *  while must-run
+     *      call all posted handlers
+     *
+     *      poll_timeout = min(heap_delay.top(), heap_events.top())
+     *
+     *      poll
+     *      if ready_cnt != 0
+     *          foreach ready event:
+     *              write EIO_OK to status
+     *
+     *              if timed
+     *                  remove from heap, rm heap-idx from status block in node
+     *                  write remaining time to time_ptr
+     *              clear all fields from node
+     *              call handler
+     *
+     *              if no more handlers for this fd
+     *                  remove node
+     *                  swap last of pollfds to current pos (update pollidx in
+     * node of last) skip iteration index increment else (ready_cnt == 0) if
+     * timeout from event-heap: write EIO_TIMEOUT to status remove from heap,
+     * clear status block fields write 0 to remaining time call handler
+     *
+     *              if no more handlers for this fd
+     *                  remove node
+     *                  swap last of pollfds to current pos (update pollidx in
+     * node of last) skip iteration index increment else write EIO_OK remove
+     * from timed-heap call handler (or add to sync list)
+     *
+     *
+     */
 }

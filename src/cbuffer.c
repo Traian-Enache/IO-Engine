@@ -32,11 +32,8 @@ void *cbuf_push(cbuffer *cbuf) {
 
         size_t fst_copy_size = (size_t)(cbuf->data_limit - cbuf->begin);
         size_t scd_copy_size = (size_t)(cbuf->end - cbuf->data);
-
-        if (fst_copy_size)
-            memmove(new_data, cbuf->begin, fst_copy_size);
-        if (scd_copy_size)
-            memmove(new_data + fst_copy_size, cbuf->data, scd_copy_size);
+        memmove(new_data, cbuf->begin, fst_copy_size);
+        memmove(new_data + fst_copy_size, cbuf->data, scd_copy_size);
 
         free(cbuf->data);
 
