@@ -1,8 +1,8 @@
 #ifndef ASYNC_RDWR_H_
 #define ASYNC_RDWR_H_ 1
 
+#include <stddef.h>
 #include "io_service.h"
-#include "stddef.h"
 
 /**
  * @brief Schedule an asynchronous read of at most `nbytes` from `fd` into `buf`
@@ -150,11 +150,11 @@ io_errcode async_read(io_service *iosvc, int fd, void *buf, size_t nbytes,
  * 
  * @return `EIO_STOPPED` The service has received a stop request
  * 
- * @return `EIO_INPROGRESS` A read has already been issued for this `fd`
+ * @return `EIO_INPROGRESS` A write has already been issued for this `fd`
  * 
  * Reported status through `errc` may be:
  * 
- * `EIO_OK` The read has completed successfully
+ * `EIO_OK` The write has completed successfully
  * 
  * `EIO_INVARG` The file descriptor is invalid
  * 
@@ -163,7 +163,7 @@ io_errcode async_read(io_service *iosvc, int fd, void *buf, size_t nbytes,
  * 
  * `EIO_STOPPED` A call to `iosvc_stop()` was made
  * 
- * `EIO_SYSERR` The read failed. Cause is found via inspecting `errno`
+ * `EIO_SYSERR` The write failed. Cause is found via inspecting `errno`
  * 
  * `EIO_EOF` A write of zero bytes was attempted
  */
