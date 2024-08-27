@@ -41,7 +41,9 @@ typedef enum
     EIO_INVARG,
     EIO_NOENTRY,
     EIO_NOMEM,
-    EIO_INPROGRESS
+    EIO_INPROGRESS,
+    EIO_SYSERR,
+    EIO_EOF
 } io_errcode;
 
 /**

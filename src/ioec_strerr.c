@@ -10,6 +10,8 @@ const char *ioec_strerr(io_errcode errc) {
         [EIO_NOENTRY] = "EIO_NOENTRY",
         [EIO_NOMEM] = "EIO_NOMEM",
         [EIO_INPROGRESS] = "EIO_INPROGRESS",
+        [EIO_SYSERR] = "EIO_SYSERR",
+        [EIO_EOF] = "EIO_EOF"
     };
 
     return errc_names[errc];

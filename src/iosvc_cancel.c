@@ -3,7 +3,6 @@
 #include "rbtree.h"
 
 #include <poll.h>
-#include <stdio.h>
 
 io_errcode iosvc_cancel(io_service *iosvc, io_event event) {
     if (iosvc->status != RUNNING)
@@ -24,15 +23,7 @@ io_errcode iosvc_cancel(io_service *iosvc, io_event event) {
     io_handler hnd = iosvc_dequeue(iosvc, *place, event.wait_type,
                                    0, EIO_CANCELLED);
 
-    (void)hnd; // hnd.callback(hnd.ctx); TODO
-
-    static const char *wait_types_names[] = {
-        [WAIT_READ] = "WAIT_READ",
-        [WAIT_WRITE] = "WAIT_WRITE",
-        [WAIT_EXCEPTION] = "WAIT_EXCEPTION"
-    };
-    fprintf(stderr, "[LOG] Calling %p with arg %p upon cancellation of event{fd=%d, wt=%s}\n",
-        (void*)(uintptr_t)hnd.callback, hnd.ctx, event.fd, wait_types_names[event.wait_type]);
+    hnd.callback(hnd.ctx);
 
     // Check if any more ops are pending for current FD
     struct pollfd *pollvec = (struct pollfd *)dynarr_front(&iosvc->pollfds);

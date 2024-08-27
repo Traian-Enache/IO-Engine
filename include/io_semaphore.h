@@ -1,5 +1,5 @@
 #ifndef IO_SEMAPHORE_H_
-#define IO_SEMAPHORE_H_
+#define IO_SEMAPHORE_H_ 1
 
 #include "io_service.h"
 
