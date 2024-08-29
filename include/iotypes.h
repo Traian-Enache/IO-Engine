@@ -1,8 +1,6 @@
 #ifndef IOTYPES_H_
 #define IOTYPES_H_ 1
 
-#include <limits.h>
-
 /**
  * @brief Wait type to be associated with a file descriptor in an event.
  * consists of `WAIT_READ`, to signal read-related events (fd readable, EOF),
@@ -55,8 +53,8 @@ typedef enum
  * Consists of members `fd` and `wait_type`.
  */
 typedef struct {
-    int fd : sizeof(int) * CHAR_BIT - 2;
-    io_wait_type wait_type : 2;
+    int fd;
+    io_wait_type wait_type;
 } io_event;
 
 /**

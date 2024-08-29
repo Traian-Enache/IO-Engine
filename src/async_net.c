@@ -10,13 +10,13 @@ typedef struct {
     socklen_t *addrlen;
     io_handler hnd;
     int *new_sock;
-    io_errcode *errc
+    io_errcode *errc;
 } accept_ctx;
 
 typedef struct {
     int sockfd;
     io_handler hnd;
-    io_errcode *errc
+    io_errcode *errc;
 } conn_ctx;
 
 static void connect_impl(void *arg) {
@@ -39,9 +39,9 @@ static void accept_impl(void *arg) {
     accept_ctx *ctx = (accept_ctx *)arg;
 
     if (*ctx->errc == EIO_OK) {
-        ctx->new_sock = accept(ctx->listen_sock, ctx->addr, ctx->addrlen);
+        *ctx->new_sock = accept(ctx->listen_sock, ctx->addr, ctx->addrlen);
 
-        if (ctx->new_sock < 0)
+        if (*ctx->new_sock < 0)
             *ctx->errc = EIO_SYSERR;
     }
     

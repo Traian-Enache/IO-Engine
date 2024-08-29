@@ -57,7 +57,7 @@ io_handler iosvc_dequeue(io_service *iosvc, rb_node *fd_node,
         [WAIT_EXCEPTION] = POLLPRI
     };
 
-    pollent->events &= ~evt_masks[event_type];
+    pollent->events &= (short)~evt_masks[event_type];
 
     if ((pollent->events & (evt_masks[WAIT_READ] | evt_masks[WAIT_WRITE])) == 0)
         pollent->events &= ~POLLERR;

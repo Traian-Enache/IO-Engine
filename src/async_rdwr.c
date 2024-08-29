@@ -50,7 +50,7 @@ static void rw_impl(void *arg) {
             ctx->buf = (char *)ctx->buf + bytes_transferred;
 
             // Check if there is more to transfer
-            if (ctx->nbytes >= 0) {
+            if (ctx->nbytes > 0) {
                 io_errcode errc =
                     iosvc_sched(ctx->iosvc,
                                 (io_event){ctx->fd, ctx->op_type},
@@ -91,7 +91,7 @@ io_errcode async_rw_sched(io_service *iosvc, int fd, void *buf, size_t nbytes,
     *transferred = 0;
 
     return iosvc_sched(iosvc, 
-                       (io_event){.fd = fd, .wait_type = op_type},
+                       (io_event){fd, op_type},
                        (io_handler){impl_callback, ctx},
                        errc);
 }
