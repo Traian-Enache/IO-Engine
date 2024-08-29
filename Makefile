@@ -7,7 +7,7 @@ OBJS        := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS        := $(OBJS:.o=.d)
 
 CC          := gcc
-CFLAGS      := -Wall -Wextra -Werror -Wpedantic -Wconversion
+CFLAGS      := -Wall -Wextra -Werror -Wpedantic -Wconversion -O3
 CPPFLAGS    := -MMD -MP -I include
 AR          := ar
 ARFLAGS     := -r -c -s
@@ -25,7 +25,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 fclean: clean
-	rm $(NAME)
+	rm -f $(NAME)
 
 .PHONY: all clean fclean
 
