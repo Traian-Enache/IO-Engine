@@ -18,15 +18,15 @@ static void rw_some_impl(void *arg) {
     rw_ctx *ctx = (rw_ctx *)arg;
 
     if (*ctx->errc == EIO_OK) {
-        ssize_t bytes_read = ctx->op_type == WAIT_READ ?
+        ssize_t bytes_transferred = ctx->op_type == WAIT_READ ?
             read(ctx->fd, ctx->buf, ctx->nbytes) :
             write(ctx->fd, ctx->buf, ctx->nbytes);
 
-        if (bytes_read < 0) {
+        if (bytes_transferred < 0) {
             *ctx->errc = EIO_SYSERR;
             *ctx->transferred = 0;
         } else {
-            *ctx->transferred = (size_t)bytes_read;
+            *ctx->transferred = (size_t)bytes_transferred;
         }
     }
 
@@ -69,10 +69,10 @@ static void rw_impl(void *arg) {
     free(ctx);
 }
 
-io_errcode async_rw_sched(io_service *iosvc, int fd, void *buf, size_t nbytes,
-                          io_handler const *hnd, size_t *transferred,
-                          io_errcode *errc, io_wait_type op_type,
-                          void (*impl_callback)(void *)) {
+static io_errcode async_rw_sched(io_service *iosvc, int fd, void *buf,
+                          size_t nbytes, io_handler const *hnd,
+                          size_t *transferred, io_errcode *errc,
+                          io_wait_type op_type, void (*impl_callback)(void *)) {
     rw_ctx *ctx = (rw_ctx *)malloc(sizeof(*ctx));
     if (!ctx)
         return EIO_NOMEM;

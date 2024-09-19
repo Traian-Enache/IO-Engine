@@ -66,6 +66,10 @@ Provides asynchronous read/write primitives: `async_read()`, `async_read_some()`
 
 Exposes asynchronous connect and accept functions (i.e. `async_connect()` and `async_accept()`).
 
+### `task_group.h`
+
+Implements task groups, used to schedule a completion handler after multiple asynchronous tasks have completed.
+
 ## Extending the functionality of this library
 
 To build higher-level asynchronous functions, there are two approaches:
